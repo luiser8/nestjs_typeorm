@@ -7,12 +7,15 @@ import { Users } from './users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(
+  constructor (
     @InjectRepository(Users) private userRepository: Repository<Users>,
-  ) {}
+  ) { }
 
   public async getUsers() {
-    return await this.userRepository.find();
+    const users = await this.userRepository.find({
+      relations: ["roles"],
+    });
+    return users;
   }
 
   public async getUsersId(id: number) {
@@ -32,7 +35,13 @@ export class UsersService {
       return new HttpException('User already exists', HttpStatus.CONFLICT);
     }
 
-    const newUsers = this.userRepository.create(users);
+    const user = new Users();
+    user.roles = users.roles;
+    user.userName = users.userName;
+    user.authStrategy = users.authStrategy;
+    user.password = users.password;
+
+    const newUsers = this.userRepository.create(user);
     return await this.userRepository.save(newUsers);
   }
 

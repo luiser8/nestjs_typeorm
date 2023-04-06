@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Role } from '../role/roles.entity';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -16,4 +23,11 @@ export class Users {
 
   @Column({ nullable: true })
   authStrategy: string;
+
+  @Column()
+  token: string;
+
+  @OneToOne(() => Role)
+  @JoinColumn({ name: "roleId" })
+  roles: Role;
 }
