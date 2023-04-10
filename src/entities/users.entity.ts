@@ -4,8 +4,12 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
-import { Role } from '../role/roles.entity';
+import { Role } from './roles.entity';
+import { Profile } from './profile.entity';
+import { Posts } from './posts.entity';
 
 @Entity({ name: 'users' })
 export class Users {
@@ -19,15 +23,22 @@ export class Users {
   password: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  ceratedAt: Date;
+  createdAt: Date;
 
   @Column({ nullable: true })
   authStrategy: string;
 
-  @Column()
+  @Column({ nullable: true })
   token: string;
 
-  @OneToOne(() => Role)
+  @ManyToOne(() => Role)
   @JoinColumn({ name: "roleId" })
   roles: Role;
+
+  @OneToOne(() => Profile)
+  @JoinColumn({ name: "profileId" })
+  profile: Profile;
+
+  @OneToMany(() => Posts, (posts) => posts.users)
+  posts: Posts[];
 }

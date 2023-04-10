@@ -9,12 +9,12 @@ import {
   Patch,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { Role } from 'src/role/roles.entity';
+import { Role } from 'src/entities/roles.entity';
 import { RoleDto } from './dto/roleDto';
 
 @Controller('role')
 export class RoleController {
-  constructor(private roleService: RoleService) {}
+  constructor (private roleService: RoleService) { }
 
   @Get()
   async getRole(): Promise<Role[]> {

@@ -1,14 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from 'src/role/roles.entity';
+import { Role } from 'src/entities/roles.entity';
 import { RoleDto } from './dto/roleDto';
 
 @Injectable()
 export class RoleService {
-  constructor(
+  constructor (
     @InjectRepository(Role) private roleRepository: Repository<Role>,
-  ) {}
+  ) { }
 
   public async getRoles() {
     return await this.roleRepository.find();

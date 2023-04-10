@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { RoleModule } from './role/role.module';
+import { ProfileModule } from './profile/profile.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { RoleModule } from './role/role.module';
     }),
     UsersModule,
     RoleModule,
+    ProfileModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,5 +9,5 @@ export class Role {
   name: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
-  ceratedAt: Date;
+  createdAt?: Date;
 }

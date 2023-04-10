@@ -10,12 +10,13 @@ import {
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
-import { Users } from './users.entity';
+import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
+import { UserLoginDto } from './dto/userLoginDto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor (private userService: UsersService) { }
 
   @Get()
   async getUsers(): Promise<Users[]> {
@@ -25,6 +26,11 @@ export class UsersController {
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.getUsersId(id);
+  }
+
+  @Post('login')
+  async loginUser(@Body() loginUser: UserLoginDto) {
+    return await this.userService.loginUsers(loginUser);
   }
 
   @Post()
