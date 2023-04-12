@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from './dto/userCreateDto';
@@ -12,7 +12,8 @@ export class UsersService {
   constructor (
     @InjectRepository(Users) private userRepository: Repository<Users>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
-  ) { }
+  ) {
+  }
 
   public async getUsers() {
     const users = await this.userRepository.find({

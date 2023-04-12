@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Delete,
   Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
@@ -18,31 +20,37 @@ import { UserLoginDto } from './dto/userLoginDto';
 export class UsersController {
   constructor (private userService: UsersService) { }
 
+  @HttpCode(HttpStatus.OK)
   @Get()
   async getUsers(): Promise<Users[]> {
     return await this.userService.getUsers();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.getUsersId(id);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   async loginUser(@Body() loginUser: UserLoginDto) {
     return await this.userService.loginUsers(loginUser);
   }
 
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async createUser(@Body() newUser: UserCreateDto) {
     return await this.userService.createUser(newUser);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.deleteUser(id);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
