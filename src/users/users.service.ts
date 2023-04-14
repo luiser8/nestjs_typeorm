@@ -1,5 +1,6 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
@@ -15,6 +16,11 @@ export class UsersService {
   ) {
   }
 
+  public async getUser(query: object) {
+    const user = await this.userRepository.findOne(query);
+    return user;
+  }
+
   public async getUsers() {
     const users = await this.userRepository.find({
       relations: ["roles", "profile", "posts"],
@@ -26,13 +32,15 @@ export class UsersService {
     const user = await this.userRepository.findOne(
       {
         where:
-          { userName: userLogin.userName, password: userLogin.password },
+          { userName: userLogin.userName },
         relations: ["roles", "profile", "posts"],
       });
-    if (user !== null) {
+    if (user === null) return { error: "Error username" };
+    const userPassCheck = await bcrypt.compare(userLogin.password, user.password);
+    if (user !== null && userPassCheck) {
       return { userId: user.id, userName: user.userName, token: user.token, email: user.profile.email, role: user.roles.name };
     } else {
-      return { error: "Error credentials" };
+      return { error: "Error password" };
     }
   }
 
@@ -65,10 +73,11 @@ export class UsersService {
         users.roles = { id: 2, name: "Invitado" };
       }
 
+      const passwordHash = await bcrypt.hash(users.password, 10);
       user.roles = users.roles;
       user.userName = users.userName;
       user.authStrategy = "jwt";
-      user.password = users.password;
+      user.password = passwordHash.toString();
       user.token = "hhgrhg7rhgrgkrmgmrlgmrlgmlrgh";
 
       const newProfile = this.profileRepository.create(users.profile);
