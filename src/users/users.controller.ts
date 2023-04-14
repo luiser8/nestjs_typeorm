@@ -15,10 +15,11 @@ import { UserUpdateDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
 import { UserLoginDto } from './dto/userLoginDto';
+import { EmailService } from '../email/email.service';
 
 @Controller('users')
 export class UsersController {
-  constructor (private userService: UsersService) { }
+  constructor (private userService: UsersService, private emailService: EmailService) { }
 
   @HttpCode(HttpStatus.OK)
   @Get()
@@ -41,7 +42,13 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createUser(@Body() newUser: UserCreateDto) {
-    return await this.userService.createUser(newUser);
+    const userCreated = await this.userService.createUser(newUser);
+    try {
+      await this.emailService.send(newUser.profile.email);
+    } catch (error) {
+      return error;
+    }
+    return userCreated;
   }
 
   @HttpCode(HttpStatus.OK)

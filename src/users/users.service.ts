@@ -78,7 +78,7 @@ export class UsersService {
       user.userName = users.userName;
       user.authStrategy = "jwt";
       user.password = passwordHash.toString();
-      user.token = "hhgrhg7rhgrgkrmgmrlgmrlgmlrgh";
+      user.token = process.env.APP_TOKEN;
 
       const newProfile = this.profileRepository.create(users.profile);
       await this.profileRepository.save(newProfile);
