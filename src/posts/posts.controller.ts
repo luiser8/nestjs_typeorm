@@ -13,8 +13,13 @@ import {
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
 import { PostsDto } from './dto/postsDto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('posts')
+@ApiTags('Posts')
+@Controller({
+  path: 'posts',
+  version: '1'
+})
 export class PostsController {
   constructor (private postsService: PostsService) { }
 

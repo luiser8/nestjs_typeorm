@@ -16,8 +16,13 @@ import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
 import { UserLoginDto } from './dto/userLoginDto';
 import { EmailService } from '../email/email.service';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('users')
+@ApiTags('Users')
+@Controller({
+  path: 'users',
+  version: '1'
+})
 export class UsersController {
   constructor (private userService: UsersService, private emailService: EmailService) { }
 
