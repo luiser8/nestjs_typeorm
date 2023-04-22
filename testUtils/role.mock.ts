@@ -1,3 +1,4 @@
+import { RoleDto } from "src/role/dto/roleDto";
 import { Role } from "../src/entities/roles.entity";
 
 export const byIdRoleMock: Role =
@@ -20,3 +21,9 @@ export const allRoleMock: Role[] = [
         "name": "otro",
     }
 ];
+
+export const nullRoleMock: Role[] = [];
+
+export const roleDtoMock = {
+    name: "customer"
+}
