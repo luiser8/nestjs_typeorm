@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { Role } from 'src/entities/roles.entity';
+import { Role } from '../entities/roles.entity';
 import { RoleDto } from './dto/roleDto';
 import { ApiTags } from '@nestjs/swagger';
 
