@@ -7,3 +7,13 @@ export class UserLoginDto {
     @ApiProperty({ description: 'Password is required', type: [String] })
     password: string;
 }
+
+export class UserLoginDtoAuth {
+    access_token: string;
+    status: number;
+}
+
+export class UserLoginDtoError {
+    message: string;
+    status: number;
+}

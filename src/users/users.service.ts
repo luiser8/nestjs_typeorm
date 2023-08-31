@@ -6,7 +6,6 @@ import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { Profile } from 'src/entities/profile.entity';
-import { UserLoginDto } from './dto/userLoginDto';
 
 @Injectable()
 export class UsersService {
@@ -26,22 +25,6 @@ export class UsersService {
       relations: ["roles", "profile", "posts"],
     });
     return users;
-  }
-
-  public async loginUsers(userLogin: UserLoginDto) {
-    const user = await this.userRepository.findOne(
-      {
-        where:
-          { userName: userLogin.userName },
-        relations: ["roles", "profile", "posts"],
-      });
-    if (user === null) return { error: "Error username" };
-    const userPassCheck = await bcrypt.compare(userLogin.password, user.password);
-    if (user !== null && userPassCheck) {
-      return { userId: user.id, userName: user.userName, token: user.token, email: user.profile.email, role: user.roles.name };
-    } else {
-      return { error: "Error password" };
-    }
   }
 
   public async getUsersId(id: number) {
@@ -70,7 +53,7 @@ export class UsersService {
       const user = new Users();
 
       if (users?.roles === undefined) {
-        users.roles = { id: 2, name: "Invitado" };
+        users.roles = { id: 1, name: "Invitado" };
       }
 
       const passwordHash = await bcrypt.hash(users.password, 10);
@@ -85,9 +68,11 @@ export class UsersService {
       user.profile = newProfile;
 
       const newUsers = this.userRepository.create(user);
-      return await this.userRepository.save(newUsers);
+      await this.userRepository.save(newUsers);
+      return { error: false, success: true, message: "Success", status: 201 };
     } catch (err) {
       console.log(err);
+      return { error: true, success: false, message: err, status: 400 }
     }
   }
 

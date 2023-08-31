@@ -9,6 +9,7 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
@@ -36,12 +37,6 @@ export class UsersController {
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.getUsersId(id);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('login')
-  async loginUser(@Body() loginUser: UserLoginDto) {
-    return await this.userService.loginUsers(loginUser);
   }
 
   @HttpCode(HttpStatus.CREATED)
