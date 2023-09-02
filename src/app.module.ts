@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
@@ -13,6 +12,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { jwtConstants } from './auth/constants';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -23,11 +23,11 @@ import { jwtConstants } from './auth/constants';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      username: 'postgresUser',
-      password: '@lerDev.pg',
+      host: 'dpg-cjp9hr61208c73ff0gcg-a',
+      username: 'nest_posts_user',
+      password: 'q0t0TuVMVvgvYrJNAuXSbvpDfprTPS4F',
       port: 5432,
-      database: 'nestjs',
+      database: 'nest_posts_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
