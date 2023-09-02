@@ -15,7 +15,7 @@ export class Posts {
     @Column()
     type: string;
 
-    @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
     @ManyToOne(() => Users, (users) => users.id)
