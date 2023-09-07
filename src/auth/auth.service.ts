@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/users.entity';
 import { Profile } from 'src/entities/profile.entity';
-import { UserLoginDto, UserLoginDtoAuth, UserLoginDtoError, UserUpdateTokenDto } from 'src/users/dto/userLoginDto';
+import { RefreshTokenDto, UserLoginDto, UserLoginDtoAuth, UserLoginDtoError, UserUpdateTokenDto } from 'src/users/dto/userLoginDto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class AuthService {
             {
                 where:
                     { userName: userLogin.userName },
-                relations: ["roles", "profile", "posts"],
+                relations: ["roles", "profile"],
             });
         if (user === null) return { message: "Error username", status: 401 };
         const userPassCheck = await bcrypt.compare(userLogin.password, user.password);
@@ -38,11 +38,12 @@ export class AuthService {
         }
     }
 
-    public async refreshService(currentToken: string): Promise<UserUpdateTokenDto | UserLoginDtoError> {
+    public async refreshService(refreshToken: RefreshTokenDto): Promise<UserUpdateTokenDto | UserLoginDtoError> {
         const user = await this.userRepository.findOne(
             {
                 where:
-                    { token: currentToken }
+                    { refreshToken: refreshToken.refresh_token },
+                relations: ["roles", "profile"],
             });
         if (user === null) return { message: "Error current token", status: 401 };
         const payload = { userId: user.id, userName: user.userName, email: user.profile.email, role: user.roles.name };

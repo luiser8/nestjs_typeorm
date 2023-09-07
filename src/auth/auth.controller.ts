@@ -6,11 +6,13 @@ import {
     HttpCode,
     HttpStatus,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import { EmailService } from '../email/email.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { UserLoginDto, UserLoginDtoAuth, UserLoginDtoError } from 'src/users/dto/userLoginDto';
+import { RefreshTokenDto, UserLoginDto, UserLoginDtoAuth, UserLoginDtoError, UserUpdateTokenDto } from 'src/users/dto/userLoginDto';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags('Auth')
 @Controller({
@@ -37,6 +39,23 @@ export class AuthController {
     @Post('login')
     async loginUser(@Body() loginUser: UserLoginDto): Promise<UserLoginDtoAuth | UserLoginDtoError> {
         return await this.authService.loginService(loginUser);
+    }
+
+    @UseGuards(AuthGuard)
+    @ApiOperation({ summary: 'Refresh token' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Success",
+        type: UserUpdateTokenDto
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: "Error",
+        type: UserLoginDtoError
+    })
+    @Post('refresh')
+    async refresh(@Body() currentToken: RefreshTokenDto): Promise<UserUpdateTokenDto | UserLoginDtoError> {
+        return await this.authService.refreshService(currentToken);
     }
 
     @HttpCode(HttpStatus.OK)

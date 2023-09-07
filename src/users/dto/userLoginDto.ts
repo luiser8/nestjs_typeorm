@@ -27,6 +27,10 @@ export class UserLoginDtoError {
     status: number;
 }
 
+export class RefreshTokenDto {
+    @ApiProperty({ description: 'Refresh Token', example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.", type: [String] })
+    refresh_token: string;
+}
 export class UserUpdateTokenDto {
     id?: number;
     @ApiProperty({ description: 'New Access Token', example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.", type: [String] })
