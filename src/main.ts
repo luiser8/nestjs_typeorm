@@ -1,22 +1,26 @@
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder().setTitle('Users Application')
-    .setDescription("Users API Application")
+  const config = new DocumentBuilder().setTitle('Nest Application')
+    .setDescription("Nest API Application")
     .setVersion('v1')
-    .addTag('users')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
+  const options: SwaggerDocumentOptions = {
+    deepScanRoutes: true
+  };
+
+  const document = SwaggerModule.createDocument(app, config, options);
+  SwaggerModule.setup('api/v1/', app, document, {
     customSiteTitle: 'API NEST POSTS',
+    url: 'api/v1/',
     swaggerOptions: {
       persistAuthorization: true,
       tryItOutEnabled: true,
-      displayRequestDuration: true
+      displayRequestDuration: true,
     }
   });
   app.enableCors();

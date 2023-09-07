@@ -10,12 +10,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { UserCreateDto } from './dto/userCreateDto';
+import { UserCreateDto, UserCreateError } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
 import { EmailService } from '../email/email.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller({
@@ -37,7 +37,17 @@ export class UsersController {
     return await this.userService.getUsersId(id);
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Reenvía link de activación' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Success",
+    type: UserCreateDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: UserCreateError
+  })
   @Post()
   async createUser(@Body() newUser: UserCreateDto) {
     const userCreated = await this.userService.createUser(newUser);

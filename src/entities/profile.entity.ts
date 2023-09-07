@@ -15,5 +15,5 @@ export class Profile {
     email: string;
 
     @Column()
-    photo: string;
+    photo?: string;
 }

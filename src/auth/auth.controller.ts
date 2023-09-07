@@ -8,7 +8,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { EmailService } from '../email/email.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserLoginDto, UserLoginDtoAuth, UserLoginDtoError } from 'src/users/dto/userLoginDto';
 
@@ -23,7 +23,17 @@ export class AuthController {
         private emailService: EmailService,
     ) { }
 
-    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Reenvía link de activación' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: "Success",
+        type: UserLoginDtoAuth
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: "Error",
+        type: UserLoginDtoError
+    })
     @Post('login')
     async loginUser(@Body() loginUser: UserLoginDto): Promise<UserLoginDtoAuth | UserLoginDtoError> {
         return await this.authService.loginService(loginUser);

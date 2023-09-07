@@ -9,13 +9,11 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
-  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
-import { PostsDto } from './dto/postsDto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { PostCreateError, PostsDto } from './dto/postsDto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Posts')
 @Controller({
@@ -43,7 +41,17 @@ export class PostsController {
     return await this.postsService.getPostsUsersId(id);
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Reenvía link de activación' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Success",
+    type: PostsDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: PostCreateError
+  })
   @Post()
   async createPost(@Body() newPost: PostsDto) {
     return await this.postsService.createPost(newPost);
