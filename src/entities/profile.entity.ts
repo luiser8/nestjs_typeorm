@@ -13,7 +13,4 @@ export class Profile {
 
     @Column({ unique: true })
     email: string;
-
-    @Column()
-    photo?: string;
 }

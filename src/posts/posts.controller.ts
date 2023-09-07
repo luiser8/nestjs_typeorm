@@ -9,10 +9,11 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
-import { PostCreateError, PostsDto } from './dto/postsDto';
+import { PostCreateError, PostsDto, PostsResponseDto } from './dto/postsDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Posts')
@@ -35,13 +36,23 @@ export class PostsController {
     return await this.postsService.getPostsId(id);
   }
 
-  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Register Posts' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Success",
+    type: [PostsResponseDto]
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: HttpException
+  })
   @Get('user/:id')
-  async getPostByUserId(@Param('id', ParseIntPipe) id: number) {
+  async getPostByUserId(@Param('id', ParseIntPipe) id: number): Promise<PostsResponseDto[] | HttpException> {
     return await this.postsService.getPostsUsersId(id);
   }
 
-  @ApiOperation({ summary: 'Posts registers' })
+  @ApiOperation({ summary: 'Register Posts' })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "Success",

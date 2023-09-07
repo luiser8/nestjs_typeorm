@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { Role } from '../entities/roles.entity';
-import { RoleDto } from './dto/roleDto';
-import { ApiTags } from '@nestjs/swagger';
+import { RoleCreateError, RoleDto } from './dto/roleDto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Role')
 @Controller({
@@ -35,7 +35,17 @@ export class RoleController {
     return await this.roleService.getRoleId(id);
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Register Role' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Success",
+    type: RoleDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: RoleCreateError
+  })
   @Post()
   async createRole(@Body() newRole: RoleDto) {
     return await this.roleService.createRole(newRole);

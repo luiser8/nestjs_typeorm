@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Posts } from 'src/entities/posts.entity';
-import { PostsDto } from './dto/postsDto';
+import { PostsDto, PostsResponseDto } from './dto/postsDto';
 
 @Injectable()
 export class PostsService {
@@ -26,9 +26,11 @@ export class PostsService {
 
   public async getPostsUsersId(userId: number) {
     const posts = await this.postsRepository.find({ relations: ["users"] });
-    const postForUser = posts.filter((post) => post.users.id === userId);
+    const postForUser = posts.filter((post) => post.users.id === userId)?.map((post) => {
+      return { id: post.id, title: post.title, description: post.description, type: post.type, createdAt: post.createdAt };
+    })
     if (!posts || !postForUser) {
-      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Post not found for user', HttpStatus.NOT_FOUND);
     }
     return postForUser;
   }
