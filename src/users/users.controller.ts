@@ -9,6 +9,7 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UserCreateDto, UserCreateError } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
@@ -16,6 +17,7 @@ import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
 import { EmailService } from '../email/email.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Users')
 @Controller({
@@ -25,12 +27,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor (private userService: UsersService, private emailService: EmailService) { }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   async getUsers(): Promise<Users[]> {
     return await this.userService.getUsers();
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) id: number) {
@@ -59,12 +63,14 @@ export class UsersController {
     return userCreated;
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.deleteUser(id);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateUser(

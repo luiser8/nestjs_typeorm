@@ -10,11 +10,13 @@ import {
   HttpCode,
   HttpStatus,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
 import { PostCreateError, PostsDto, PostsResponseDto } from './dto/postsDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Posts')
 @Controller({
@@ -36,6 +38,7 @@ export class PostsController {
     return await this.postsService.getPostsId(id);
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get Posts for user' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -52,6 +55,7 @@ export class PostsController {
     return await this.postsService.getPostsUsersId(id);
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Register Posts' })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -68,12 +72,14 @@ export class PostsController {
     return await this.postsService.createPost(newPost);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async deleteRole(@Param('id', ParseIntPipe) id: number) {
     return await this.postsService.deletePost(id);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateRole(

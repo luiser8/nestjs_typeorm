@@ -9,11 +9,13 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { Role } from '../entities/roles.entity';
 import { RoleCreateError, RoleDto } from './dto/roleDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Role')
 @Controller({
@@ -23,18 +25,21 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class RoleController {
   constructor (private roleService: RoleService) { }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
   async getRole(): Promise<Role[]> {
     return await this.roleService.getRoles();
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async getRoleById(@Param('id', ParseIntPipe) id: number) {
     return await this.roleService.getRoleId(id);
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Register Role' })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -51,12 +56,14 @@ export class RoleController {
     return await this.roleService.createRole(newRole);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async deleteRole(@Param('id', ParseIntPipe) id: number) {
     return await this.roleService.deleteRole(id);
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateRole(
