@@ -13,7 +13,8 @@ function DatabaseOrmModule(): DynamicModule {
         username: config.APP_DB_USER,
         password: config.APP_DB_PASS,
         database: config.APP_DB_DBNAME,
-        synchronize: config.APP_DB_SYNCHRONIZE
+        synchronize: config.APP_DB_SYNCHRONIZE,
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
     })
 }
 

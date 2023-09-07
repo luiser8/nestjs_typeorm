@@ -9,13 +9,11 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
-  Query,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/userCreateDto';
 import { UserUpdateDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
-import { UserLoginDto } from './dto/userLoginDto';
 import { EmailService } from '../email/email.service';
 import { ApiTags } from '@nestjs/swagger';
 
