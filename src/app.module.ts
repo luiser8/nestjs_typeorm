@@ -31,6 +31,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
+      // type: 'postgres',
+      // host: 'localhost',
+      // username: 'postgresUser',
+      // password: '@lerDev.pg',
+      // port: 5432,
+      // database: 'nestjs',
+      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // synchronize: true,
+      // autoLoadEntities: true,
     }),
     MailerModule.forRoot({
       transport: {
