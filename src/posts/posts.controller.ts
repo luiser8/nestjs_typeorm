@@ -36,7 +36,7 @@ export class PostsController {
     return await this.postsService.getPostsId(id);
   }
 
-  @ApiOperation({ summary: 'Register Posts' })
+  @ApiOperation({ summary: 'Get Posts for user' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
