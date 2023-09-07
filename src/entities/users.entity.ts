@@ -31,6 +31,9 @@ export class Users {
   @Column({ nullable: true })
   token: string;
 
+  @Column({ nullable: true })
+  refreshToken: string;
+
   @ManyToOne(() => Role)
   @JoinColumn({ name: "roleId" })
   roles: Role;
