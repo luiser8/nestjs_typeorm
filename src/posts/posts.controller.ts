@@ -41,7 +41,7 @@ export class PostsController {
     return await this.postsService.getPostsUsersId(id);
   }
 
-  @ApiOperation({ summary: 'Reenvía link de activación' })
+  @ApiOperation({ summary: 'Posts registers' })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "Success",

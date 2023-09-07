@@ -23,7 +23,7 @@ export class AuthController {
         private emailService: EmailService,
     ) { }
 
-    @ApiOperation({ summary: 'Reenvía link de activación' })
+    @ApiOperation({ summary: 'User authentication' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: "Success",

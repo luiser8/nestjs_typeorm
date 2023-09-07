@@ -37,7 +37,7 @@ export class UsersController {
     return await this.userService.getUsersId(id);
   }
 
-  @ApiOperation({ summary: 'Reenvía link de activación' })
+  @ApiOperation({ summary: 'Register Users' })
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "Success",
