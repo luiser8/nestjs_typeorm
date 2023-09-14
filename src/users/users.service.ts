@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from './dto/userCreateDto';
-import { UserUpdateDto } from './dto/userUpdateDto';
+import { UserUpdateDto, UserUpdateErrorDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { Profile } from 'src/entities/profile.entity';
+import { UserDeleteDto, UserDeleteErrorDto } from './dto/userDeleteDto';
 
 @Injectable()
 export class UsersService {
@@ -76,22 +77,34 @@ export class UsersService {
     }
   }
 
-  public async deleteUser(id: number) {
-    const result = await this.userRepository.delete(id);
-    if (result.affected === 0) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+  public async deleteUser(id: number): Promise<UserDeleteDto | UserDeleteErrorDto> {
+    try {
+      const result = await this.userRepository.delete(id);
+      if (result.affected === 0) {
+        return { message: 'User delete not found', status: 400 };
+      }
+      return { message: 'Delete success', status: 202 };
+    } catch (error) {
+      return { message: 'User delete error', status: 400 };
     }
-    return result;
   }
 
-  public async updateUser(id: number, user: UserUpdateDto) {
-    const existsUser = await this.userRepository.findOne({
-      where: { id },
-    });
-
-    if (!existsUser) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+  public async updateUser(id: number, user: UserUpdateDto): Promise<UserUpdateDto | UserUpdateErrorDto> {
+    try {
+      const existsUser = await this.userRepository.findOne({
+        where: { id },
+      });
+      if (!existsUser) {
+        return { message: 'User update not found', status: 400 };
+      }
+      if (user?.password !== undefined) {
+        const passwordHash = await bcrypt.hash(user.password, 10);
+        user.password = passwordHash.toString();
+        await this.userRepository.update({ id }, { userName: user.userName, password: user.password });
+      }
+      return { message: 'User update success', status: 200 };
+    } catch (err) {
+      return { message: 'User update error', status: 400 };
     }
-    return await this.userRepository.update({ id }, user);
   }
 }

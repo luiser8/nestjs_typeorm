@@ -2,7 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Posts } from 'src/entities/posts.entity';
-import { PostsDto } from './dto/postsDto';
+import { PostsCreateDto, PostsResponseDto } from './dto/postsCreateDto';
+import { PostsDeleteDto, PostsDeleteErrorDto } from './dto/postsDeleteDto';
+import { PostUpdateError, PostsUpdateDto } from './dto/postsUpdateDto';
 
 @Injectable()
 export class PostsService {
@@ -24,7 +26,7 @@ export class PostsService {
     return posts;
   }
 
-  public async getPostsUsersId(userId: number) {
+  public async getPostsUsersId(userId: number): Promise<PostsResponseDto[] | HttpException> {
     const posts = await this.postsRepository.find({ relations: ["users"] });
     const postForUser = posts.filter((post) => post.users.id === userId)?.map((post) => {
       return { id: post.id, title: post.title, description: post.description, type: post.type, createdAt: post.createdAt };
@@ -35,7 +37,7 @@ export class PostsService {
     return postForUser;
   }
 
-  public async createPost(post: PostsDto) {
+  public async createPost(post: PostsCreateDto): Promise<PostsCreateDto> {
     try {
       const posts = new Posts();
       posts.users = post.users;
@@ -50,22 +52,31 @@ export class PostsService {
     }
   }
 
-  public async deletePost(id: number) {
-    const result = await this.postsRepository.delete(id);
-    if (result.affected === 0) {
-      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+  public async deletePost(id: number): Promise<PostsDeleteDto | PostsDeleteErrorDto> {
+    try {
+      const result = await this.postsRepository.delete(id);
+      if (result.affected === 0) {
+        return { message: 'Delete error', status: 400 };
+      }
+      return { message: 'Delete success', status: 202 };
+    } catch (error) {
+      return { message: 'Posts delete error', status: 400 };
     }
-    return result;
   }
 
-  public async updatePost(id: number, post: PostsDto) {
-    const existsPost = await this.postsRepository.findOne({
-      where: { id },
-    });
+  public async updatePost(id: number, post: PostsUpdateDto): Promise<PostsUpdateDto | PostUpdateError> {
+    try {
+      const existsPost = await this.postsRepository.findOne({
+        where: { id },
+      });
 
-    if (!existsPost) {
-      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      if (!existsPost) {
+        return { message: 'Posts update error', status: 400 };
+      }
+      await this.postsRepository.update({ id }, post);
+      return { message: 'Posts update success', status: 200 };
+    } catch (error) {
+      return { message: 'Posts update error', status: 400 };
     }
-    return await this.postsRepository.update({ id }, post);
   }
 }

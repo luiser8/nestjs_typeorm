@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Users } from "src/entities/users.entity";
 
-export class PostsDto {
+export class PostsCreateDto {
   id?: number;
 
   @ApiProperty({ description: 'Title is required', example: "View nature", type: [String] })

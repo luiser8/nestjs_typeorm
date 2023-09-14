@@ -14,9 +14,11 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
-import { PostCreateError, PostsDto, PostsResponseDto } from './dto/postsDto';
+import { PostCreateError, PostsCreateDto, PostsResponseDto } from './dto/postsCreateDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { PostsDeleteDto, PostsDeleteErrorDto } from './dto/postsDeleteDto';
+import { PostUpdateError, PostsUpdateDto } from './dto/postsUpdateDto';
 
 @ApiTags('Posts')
 @Controller({
@@ -60,7 +62,7 @@ export class PostsController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "Success",
-    type: PostsDto
+    type: PostsCreateDto
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -68,24 +70,46 @@ export class PostsController {
     type: PostCreateError
   })
   @Post()
-  async createPost(@Body() newPost: PostsDto) {
+  async createPost(@Body() newPost: PostsCreateDto) {
     return await this.postsService.createPost(newPost);
   }
 
+  @ApiOperation({ summary: 'Deleted Posts' })
+  @ApiResponse({
+    status: HttpStatus.ACCEPTED,
+    description: "Deleted",
+    type: PostsDeleteDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: PostsDeleteErrorDto
+  })
   @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.ACCEPTED)
   @Delete(':id')
-  async deleteRole(@Param('id', ParseIntPipe) id: number) {
+  async deleteRole(@Param('id', ParseIntPipe) id: number): Promise<PostsDeleteDto | PostsDeleteErrorDto> {
     return await this.postsService.deletePost(id);
   }
 
+  @ApiOperation({ summary: 'Updates Posts' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Updated",
+    type: PostsUpdateDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: PostUpdateError
+  })
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateRole(
     @Param('id', ParseIntPipe) id: number,
-    @Body() newPost: PostsDto,
-  ) {
+    @Body() newPost: PostsUpdateDto,
+  ): Promise<PostsUpdateDto | PostUpdateError> {
     return await this.postsService.updatePost(id, newPost);
   }
 }

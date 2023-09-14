@@ -12,12 +12,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserCreateDto, UserCreateError } from './dto/userCreateDto';
-import { UserUpdateDto } from './dto/userUpdateDto';
+import { UserUpdateDto, UserUpdateErrorDto } from './dto/userUpdateDto';
 import { Users } from '../entities/users.entity';
 import { UsersService } from './users.service';
 import { EmailService } from '../email/email.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { PostsService } from 'src/posts/posts.service';
+import { PostsResponseDto } from 'src/posts/dto/postsCreateDto';
+import { UserDeleteDto, UserDeleteErrorDto } from './dto/userDeleteDto';
+import { ProfileService } from 'src/profile/profile.service';
 
 @ApiTags('Users')
 @Controller({
@@ -25,7 +29,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
   version: '1'
 })
 export class UsersController {
-  constructor (private userService: UsersService, private emailService: EmailService) { }
+  constructor (private userService: UsersService, private emailService: EmailService, private postService: PostsService, private profileService: ProfileService) { }
 
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
@@ -54,29 +58,55 @@ export class UsersController {
   })
   @Post()
   async createUser(@Body() newUser: UserCreateDto) {
-    const userCreated = await this.userService.createUser(newUser);
-    try {
-      await this.emailService.send(newUser.profile.email);
-    } catch (error) {
-      return error;
-    }
-    return userCreated;
+    return await this.userService.createUser(newUser);
   }
 
+  @ApiOperation({ summary: 'Delete Users' })
+  @ApiResponse({
+    status: HttpStatus.ACCEPTED,
+    description: "Deleted",
+    type: UserDeleteDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: UserDeleteErrorDto
+  })
   @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.ACCEPTED)
   @Delete(':id')
-  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<UserDeleteDto | UserDeleteErrorDto> {
+    const postsUser = await this.postService.getPostsUsersId(id) as PostsResponseDto[];
+    if (postsUser.length > 1) {
+      postsUser.forEach(x => {
+        this.postService.deletePost(x.id);
+      })
+    }
     return await this.userService.deleteUser(id);
   }
 
+  @ApiOperation({ summary: 'Update Users' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Updated",
+    type: UserUpdateDto
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: "Error",
+    type: UserUpdateErrorDto
+  })
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() newUser: UserUpdateDto,
-  ) {
+  ): Promise<UserUpdateDto | UserUpdateErrorDto> {
+    if (newUser.profile === undefined) {
+      return await this.userService.updateUser(id, newUser);
+    }
+    await this.profileService.updateProfile(id, newUser.profile);
     return await this.userService.updateUser(id, newUser);
   }
 }
