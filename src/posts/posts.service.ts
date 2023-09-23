@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Posts } from 'src/entities/posts.entity';
-import { PostsCreateDto, PostsResponseDto } from './dto/postsCreateDto';
+import { PostCreateError, PostsCreateDto, PostsCreateStatus, PostsResponseDto } from './dto/postsCreateDto';
 import { PostsDeleteDto, PostsDeleteErrorDto } from './dto/postsDeleteDto';
 import { PostUpdateError, PostsUpdateDto } from './dto/postsUpdateDto';
 
@@ -37,7 +37,7 @@ export class PostsService {
     return postForUser;
   }
 
-  public async createPost(post: PostsCreateDto): Promise<PostsCreateDto> {
+  public async createPost(post: PostsCreateDto): Promise<PostsCreateStatus | PostCreateError> {
     try {
       const posts = new Posts();
       posts.users = post.users;
@@ -46,9 +46,25 @@ export class PostsService {
       posts.type = post.type;
 
       const newPost = this.postsRepository.create(posts);
-      return await this.postsRepository.save(newPost);
+      const request = await this.postsRepository.save(newPost);
+
+      return {
+        id: request.id,
+        title: request.title,
+        description: request.description,
+        createdAt: request.createdAt,
+        type: request.type,
+        users: request.users,
+        message: 'Post created',
+        status: 201
+      }
     } catch (error) {
-      console.log(error);
+      return {
+        error: true,
+        success: false,
+        message: 'Post error',
+        status: 400
+      }
     }
   }
 

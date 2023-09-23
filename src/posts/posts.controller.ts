@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Posts } from 'src/entities/posts.entity';
-import { PostCreateError, PostsCreateDto, PostsResponseDto } from './dto/postsCreateDto';
+import { PostCreateError, PostsCreateDto, PostsCreateStatus, PostsResponseDto } from './dto/postsCreateDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { PostsDeleteDto, PostsDeleteErrorDto } from './dto/postsDeleteDto';
@@ -70,7 +70,7 @@ export class PostsController {
     type: PostCreateError
   })
   @Post()
-  async createPost(@Body() newPost: PostsCreateDto) {
+  async createPost(@Body() newPost: PostsCreateDto): Promise<PostsCreateStatus | PostCreateError> {
     return await this.postsService.createPost(newPost);
   }
 

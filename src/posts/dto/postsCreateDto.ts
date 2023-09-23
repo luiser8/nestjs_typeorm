@@ -18,12 +18,33 @@ export class PostsCreateDto {
   users: Users;
 }
 
+export class PostsCreateStatus {
+  id: number;
+
+  @ApiProperty({ description: 'Title is required', example: "View nature", type: [String] })
+  title: string;
+
+  @ApiProperty({ description: 'Description is required', example: "View nature forever", type: [String] })
+  description: string;
+
+  @ApiProperty({ description: 'Type is required', example: "OCIO", type: [String] })
+  type: string;
+  createdAt?: Date;
+
+  @ApiProperty({ description: 'User Id is required', example: { "id": 1 }, type: [String] })
+  users: Users;
+
+  status: number;
+
+  message: string;
+}
+
 export class PostCreateError {
   @ApiProperty({ description: 'Error creating user account', example: "true", type: [Boolean] })
-  error: string;
+  error: boolean;
 
   @ApiProperty({ description: 'Success creating user account', example: "false", type: [Boolean] })
-  success: string;
+  success: boolean;
 
   @ApiProperty({ description: 'Success creating user account', example: "Error", type: [String] })
   message: string;
