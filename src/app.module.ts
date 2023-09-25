@@ -39,6 +39,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       transport: {
         host: process.env.APP_EMAIL_HOST,
         port: process.env.APP_EMAIL_PORT,
+        ignoreTLS: true,
+        secure: true,
         auth: {
           user: process.env.APP_EMAIL_USER,
           pass: process.env.APP_EMAIL_PASS,
