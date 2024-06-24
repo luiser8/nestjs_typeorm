@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
@@ -57,4 +57,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+  private readonly _logger: Logger = new Logger(AppModule.name);
+
+  onModuleInit(): void {
+    this._logger.debug(
+        `Application started at port: \x1b[37m${process.env.APP_PORT}`
+    );
+  }
+}
