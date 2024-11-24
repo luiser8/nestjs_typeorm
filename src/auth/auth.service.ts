@@ -17,24 +17,50 @@ export class AuthService {
     }
 
     public async loginService(userLogin: UserLoginDto): Promise<UserLoginDtoAuth | UserLoginDtoError> {
-        const user = await this.userRepository.findOne(
-            {
-                where:
-                    { userName: userLogin.userName },
+        try {
+            const user = await this.userRepository.findOne({
+                where: { userName: userLogin.userName },
                 relations: ["roles", "profile"],
             });
-        if (user === null) return { message: "Error username", status: 401 };
-        const userPassCheck = await bcrypt.compare(userLogin.password, user.password);
-        if (user !== null && userPassCheck) {
-            const payload = { userId: user.id, userName: user.userName, email: user.profile.email, role: user.roles.name };
+
+            if (!user || !user.password) {
+                return { message: "Error: Username not found or invalid user data", status: 401 };
+            }
+
+            if (!userLogin.password || typeof userLogin.password !== 'string') {
+                return { message: "Error: Invalid password input", status: 400 };
+            }
+
+            const isPasswordValid = await bcrypt.compare(userLogin.password, user.password);
+            if (!isPasswordValid) {
+                return { message: "Error: Invalid password", status: 401 };
+            }
+
+            const { id, userName, roles, profile } = user;
+            const payload = {
+                userId: id,
+                userName,
+                email: profile.email,
+                role: roles.name,
+            };
+
             const access_token = await this.jwtService.signAsync(payload, { expiresIn: "10h" });
             const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: "7d" });
 
-            const updateUser = this.updateTokens({ id: user.id, new_access_token: access_token, new_refresh_token: refresh_token });
-            if (updateUser)
-                return { access_token, refresh_token, status: 200 };
-        } else {
-            return { message: "Error password", status: 401 };
+            const tokensUpdated = await this.updateTokens({
+                id,
+                new_access_token: access_token,
+                new_refresh_token: refresh_token,
+            });
+
+            if (!tokensUpdated) {
+                return { message: "Error: Failed to update tokens", status: 500 };
+            }
+
+            return { access_token, refresh_token, status: 200 };
+        } catch (error) {
+            console.error("Login error:", error);
+            return { message: "Error: Internal server error", status: 500 };
         }
     }
 
