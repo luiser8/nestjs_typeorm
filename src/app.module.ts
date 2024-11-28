@@ -25,11 +25,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       signOptions: { expiresIn: jwtConstants.expire },
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: process.env.APP_DB_TYPE as any,
       host: process.env.APP_DB_HOST,
       username: process.env.APP_DB_USER,
       password: process.env.APP_DB_PASS as string,
-      port: process.env.APP_DB_PORT as any,
+      port: Number(process.env.APP_DB_PORT) as number,
       database: process.env.APP_DB_DBNAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.APP_DB_SYNCHRONIZE as any,
