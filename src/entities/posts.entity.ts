@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Timestamp } from 'typeorm';
 import { Users } from './users.entity';
 
 @Entity({ name: 'posts' })
@@ -15,7 +15,7 @@ export class Posts {
     @Column()
     type: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'datetime', default: () => 'GETDATE()' })
     createdAt: Date;
 
     @ManyToOne(() => Users, (users) => users.id)

@@ -22,7 +22,7 @@ export class Users {
   @Column()
   password: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'GETDATE()' })
   createdAt: Date;
 
   @Column({ nullable: true })

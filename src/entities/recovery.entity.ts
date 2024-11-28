@@ -12,7 +12,7 @@ export class Recovery {
     @Column()
     status: boolean;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'datetime', default: () => 'GETDATE()' })
     createdAt?: Date;
 
     @ManyToOne(() => Users, (users) => users.id)
