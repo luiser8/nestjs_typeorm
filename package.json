@@ -1,7 +1,7 @@
 {
   "name": "nestjs_typeorm",
   "version": "1.0.1",
-  "description": "NestJS CRUD users & posts / practice",
+  "description": "NestJS CRUD users & posts / pre-register",
   "author": "Luis Eduardo",
   "private": true,
   "license": "MIT",
