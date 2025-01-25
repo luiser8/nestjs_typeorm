@@ -12,6 +12,7 @@ import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { jwtConstants } from './auth/constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PreRegistrationModule } from './preRegistration/preRegistration.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ProfileModule,
     PostsModule,
     EmailModule,
+    PreRegistrationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
