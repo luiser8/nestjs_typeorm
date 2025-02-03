@@ -35,6 +35,7 @@ import { PreRegistrationModule } from './preRegistration/preRegistration.module'
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.APP_DB_SYNCHRONIZE as any,
       autoLoadEntities: process.env.APP_DB_AUTOLOADENTITIES as any,
+      ssl: process.env.APP_DB_SSL as any,
     }),
     MailerModule.forRoot({
       transport: {
@@ -64,7 +65,7 @@ export class AppModule {
 
   onModuleInit(): void {
     this._logger.debug(
-        `Application started at port: \x1b[37m${process.env.APP_PORT}`
+      `Application started at port: \x1b[37m${process.env.APP_PORT}`,
     );
   }
 }
