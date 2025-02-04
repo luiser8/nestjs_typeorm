@@ -56,7 +56,7 @@ export class PreRegistrationService {
   ): Promise<ExcelJS.Buffer | HttpException> {
     try {
       const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Pre-Registrations');
+      const worksheet = workbook.addWorksheet('Pre-registrados');
       worksheet.columns = [
         { header: 'Nombres', key: 'firstName', width: 30 },
         { header: 'Apellidos', key: 'lastName', width: 30 },
