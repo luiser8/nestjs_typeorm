@@ -20,5 +20,4 @@ APP_DB_PORT=
 APP_DB_DBNAME=
 APP_DB_SYNCHRONIZE=true
 APP_DB_AUTOLOADENTITIES=true
-APP_DB_SSL=true
 APP_ALLOWED_ORIGINS="http://localhost:3001;http://localhost:4001;http://localhost:5173"

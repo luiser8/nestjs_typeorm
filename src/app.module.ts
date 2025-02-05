@@ -35,7 +35,7 @@ import { PreRegistrationModule } from './preRegistration/preRegistration.module'
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.APP_DB_SYNCHRONIZE as any,
       autoLoadEntities: process.env.APP_DB_AUTOLOADENTITIES as any,
-      ssl: process.env.APP_DB_SSL as any,
+      ssl: process.env.APP_ENV === "production" ? true : false as any,
     }),
     MailerModule.forRoot({
       transport: {
