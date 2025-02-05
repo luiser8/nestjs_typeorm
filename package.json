@@ -18,40 +18,40 @@
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
-    "@nestjs/common": "^11.0.5",
+    "@nestjs/common": "^11.0.7",
     "@nestjs/config": "^4.0.0",
-    "@nestjs/core": "^11.0.5",
+    "@nestjs/core": "^11.0.7",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/passport": "^11.0.5",
-    "@nestjs/platform-express": "^11.0.5",
+    "@nestjs/platform-express": "^11.0.7",
     "@nestjs/swagger": "^11.0.3",
     "@nestjs/typeorm": "^11.0.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "dotenv": "^16.4.7",
+    "exceljs": "^4.4.0",
     "nodemailer": "^6.10.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
-    "typeorm": "^0.3.20",
-    "class-validator": "^0.14.1",
-    "class-transformer": "^0.5.1",
-    "exceljs": "^4.4.0"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.2",
     "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.5",
+    "@nestjs/testing": "^11.0.7",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/jest": "29.5.14",
-    "@types/node": "22.10.10",
+    "@types/node": "22.13.1",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
-    "@typescript-eslint/parser": "^8.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -81,5 +81,13 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@nestjs/core"
+    ],
+    "onlyBuiltDependencies": [
+      "@nestjs/core"
+    ]
   }
 }
