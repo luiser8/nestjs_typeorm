@@ -1,0 +1,49 @@
+version: "3.13"
+
+services:
+  nest_app:
+    container_name: nest_app
+    image: dockerhub-nest_app:1.0.0
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+      - APP_PORT=3000
+      - APP_PREFIX=api
+      - APP_SWAGGER_UI=true
+      - APP_TITLE=Nest Application
+      - APP_DESCRIPTION=Nest API Application For Practices
+      - APP_VERSION=v1
+      - APP_TOKEN=jfkjsfis.533kofoe.op988fgdsereretetregr5343rg.ku
+      - APP_EMAIL_HOST=
+      - APP_EMAIL_PORT=
+      - APP_EMAIL_USER=
+      - APP_EMAIL_PASS=
+      - APP_EMAIL_SECURITY=
+      - APP_DB_TYPE=postgres
+      - APP_DB_HOST=localhost
+      - APP_DB_USER=postgresUser
+      - APP_DB_PASS=@lerDev.pg
+      - APP_DB_PORT=5432
+      - APP_DB_DBNAME=nestjs
+      - APP_DB_SYNCHRONIZE=true
+      - APP_DB_AUTOLOADENTITIES=true
+      - APP_ALLOWED_ORIGINS=http://localhost:3001;http://localhost:4001;http://localhost:5173
+    command: pnpm start
+    depends_on:
+      - nestjs
+  nestjs:
+    container_name: nestjs
+    image: postgres:17.4
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=@lerDev.pg
+      - POSTGRES_USER=postgresUser
+      - POSTGRES_DB=nestjs
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}
