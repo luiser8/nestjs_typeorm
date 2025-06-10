@@ -39,10 +39,11 @@ import { PreRegistrationModule } from './preRegistration/preRegistration.module'
     }),
     MailerModule.forRoot({
       transport: {
+        service: process.env.APP_EMAIL_SERVICE,
         host: process.env.APP_EMAIL_HOST,
         port: process.env.APP_EMAIL_PORT,
-        ignoreTLS: true,
-        secure: true,
+        ignoreTLS: process.env.APP_EMAIL_TLS === 'true',
+        secure: process.env.APP_EMAIL_SECURITY === 'true',
         auth: {
           user: process.env.APP_EMAIL_USER,
           pass: process.env.APP_EMAIL_PASS,

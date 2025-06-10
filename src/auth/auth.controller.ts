@@ -19,6 +19,7 @@ import {
   UserUpdateTokenDto,
 } from 'src/users/dto/userLoginDto';
 import { AuthGuard } from './auth.guard';
+import { EmailBodyDto } from 'src/email/dto/emailBodyDto';
 
 @ApiTags('Auth')
 @Controller({
@@ -26,10 +27,10 @@ import { AuthGuard } from './auth.guard';
   version: '1',
 })
 export class AuthController {
-  constructor(
+  constructor (
     private authService: AuthService,
     private emailService: EmailService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'User authentication' })
   @ApiResponse({
@@ -71,6 +72,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get('forgot')
   async forgot(@Query('email') email: string) {
+    const emailBody: EmailBodyDto = {
+      emailTo: email,
+      subject: 'Forgot Password',
+      message: 'Reset your password',
+      html: '<b>Reset your password FDFDFEF</b>',
+    };
+    this.emailService.send(emailBody);
     return await this.authService.forgotService(email);
   }
 }

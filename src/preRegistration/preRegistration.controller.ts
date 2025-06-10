@@ -16,6 +16,8 @@ import {
 } from 'src/entities/preRegistration.entity';
 import { PreRegistrationCreateDto } from './dto/preRegistrationCreateDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { EmailService } from 'src/email/email.service';
+import { EmailBodyDto } from 'src/email/dto/emailBodyDto';
 
 @ApiTags('PreRegistration')
 @Controller({
@@ -23,7 +25,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
   version: '1',
 })
 export class PreRegistrationController {
-  constructor(private preRegistrationService: PreRegistrationService) {}
+  constructor(private preRegistrationService: PreRegistrationService, private emailService: EmailService) {}
 
   @ApiOperation({ summary: 'Create PreRegistration' })
   @ApiResponse({
@@ -40,6 +42,13 @@ export class PreRegistrationController {
   async createPreRegistration(
     @Body() preRegistration: PreRegistrationCreateDto,
   ): Promise<PreRegistrationCreateResponse | HttpException> {
+    const emailBody: EmailBodyDto = {
+      emailTo: preRegistration.email,
+      subject: 'Pre-Registration',
+      message: 'Welcome to the Pre-Registration',
+      html: '<b>Welcome to the Pre-Registration</b>',
+    };
+    this.emailService.send(emailBody);
     return await this.preRegistrationService.createPreRegistration(
       preRegistration,
     );
